@@ -101,6 +101,7 @@ void inputBegin_And_End(note&notes,int&begin,int&end)
         else 
         {
             begin--;
+            end--;
             break;
         }
     }
@@ -117,19 +118,18 @@ int judgeReplace(int n)
 //将noteInformationAll中的note部分反转
 void reverseNote(note&notes,int begin,int end)
 {
-    int Pos,num,n,current_num=0;
+    int Pos,num,n,current_num=0,i=0;
     InFile.seekg(Pos1,ios::beg);
     getline(InFile,notes.noteInformation);
     getNoteBegin_And_End(notes);
     inputBegin_And_End(notes,begin,end);
     Pos=notes.noteInformation.find("\"beat\":["+to_string(begin),0);//获取开始小节的位置
 
-    while(current_num<=end)
+    while(current_num=getNum(notes.noteInformation,Pos)<=end)
     {
         num=notes.noteInformation.find("\"column\":",Pos)+strlen("\"column\":");
         n=notes.noteInformation[num]-'0';
         notes.noteInformation=notes.noteInformation.replace(num,1,to_string(judgeReplace(n)));
-        current_num=getNum(notes.noteInformation,Pos);
         Pos=notes.noteInformation.find("\"beat\":[",Pos+1);
     }
     OutFile<<"\""<<notes.noteInformation;
